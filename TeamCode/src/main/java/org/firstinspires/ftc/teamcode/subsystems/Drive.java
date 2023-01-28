@@ -19,7 +19,7 @@ public class Drive {
     private boolean boost;
     private boolean brake;
     private boolean slowmode;
-
+    double DEGTORAD = 0.0174532925199;
     /**
      * This holds a reference to the owner opmode's telemetry object, it is used to send information
      * to the driver station.
@@ -220,6 +220,22 @@ public class Drive {
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
         motorBackRight.setPower(0);
+    }
+
+    public void fieldOrientedDrive (double dirX, double dirY, double dirRx, double heading) {
+        //The following is for left stick control.
+        dirX = -dirX;
+        telemetry.addData("FOC incoming: ","dirX %f, dirY %f, Rx %f, heading %f", dirX, dirY, dirRx, heading);
+        double joystickAng = Math.atan2(dirY, dirX);
+        double robotAng = ((heading+180)*DEGTORAD) - joystickAng;
+        double hyp = Math.sqrt(Math.pow(dirX, 2)+Math.pow(dirY, 2));
+        double robotX = hyp*Math.cos(robotAng);
+        double robotY = hyp*Math.sin(robotAng);
+        telemetry.addData("FOC: ","joyAng %f, robotAng %f, hyp %f, robotX %f, robotY %f", joystickAng, robotAng, hyp, robotX, robotY);
+        setMotorSpeeds(robotX, robotY, dirRx);
+
+        //TODO: twin stick shooter control for right stick
+
     }
 
     /**

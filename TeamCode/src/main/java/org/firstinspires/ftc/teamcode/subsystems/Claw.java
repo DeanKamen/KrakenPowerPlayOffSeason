@@ -40,9 +40,7 @@ public class Claw {
             claw.subsystemExists = false;
             telemetry.addLine("Claw Subsystem: does not exist and is not initialized.");
         }
-
         // Return the initialized drive.
-        telemetry.update();
         return claw;
     }
 
@@ -57,7 +55,6 @@ public class Claw {
 
     public void setClawState(boolean buttonDown){
         telemetry.addData("Claw Position" , servoClaw.getPosition());
-        telemetry.update();
         if (buttonDown && !claw_locked_open) {
             servoClaw.setPosition(0.9);
             clawState = true;
